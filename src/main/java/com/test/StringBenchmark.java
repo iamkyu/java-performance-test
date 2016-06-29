@@ -2,6 +2,8 @@ package com.test;
 
 import org.openjdk.jmh.annotations.Benchmark;
 import org.openjdk.jmh.annotations.Mode;
+import org.openjdk.jmh.annotations.Scope;
+import org.openjdk.jmh.annotations.State;
 import org.openjdk.jmh.runner.Runner;
 import org.openjdk.jmh.runner.options.Options;
 import org.openjdk.jmh.runner.options.OptionsBuilder;
@@ -12,6 +14,7 @@ import java.util.concurrent.TimeUnit;
 /**
  * Created by kjnam on 2016. 6. 27..
  */
+@State(Scope.Benchmark)
 public class StringBenchmark {
 
     public static void main(String[] args) throws Exception {
@@ -50,20 +53,37 @@ public class StringBenchmark {
         new Runner(opt).run();
     }
 
+    private String from = "Alex";
+    private String to = "Readers";
+    private String subject = "Benchmarking with JMH";
+
     @Benchmark
-    public String testEmptyBuffer() {
-        StringBuffer buffer = new StringBuffer();
-        return buffer.toString();
+    public String testEmailBuilderChain() {
+        return new StringBuilder()
+                .append("From")
+                .append(from)
+                .append("To")
+                .append(to)
+                .append("Subject")
+                .append(subject)
+                .toString();
     }
 
     @Benchmark
-    public String testEmptyBuilder() {
-        StringBuilder builder = new StringBuilder();
-        return builder.toString();
+    public String testEmailBufferChain() {
+        return new StringBuffer()
+                .append("From")
+                .append(from)
+                .append("To")
+                .append(to)
+                .append("Subject")
+                .append(subject)
+                .toString();
     }
 
     @Benchmark
-    public String testEmptyLiteral() {
-        return "";
+    public String testEmailLiteralConcat() {
+        return "From" + from + "To" + to + "Subject" + subject;
     }
+
 }
